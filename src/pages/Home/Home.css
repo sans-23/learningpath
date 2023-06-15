@@ -1,0 +1,64 @@
+.hero {
+    background-image: url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 80px 0;
+    text-align: center;
+    color: var(--text-color);
+    flex-grow: 1;
+    position: relative; /* Add position relative */
+    z-index: 1; /* Add z-index to bring it above the feature section */
+  }
+  
+  .hero h1 {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .hero p {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+  
+  /* Customize the feature section styles */
+  .feature {
+    padding: 80px 0;
+    height: calc(100vh - 200px); /* Adjust the height as needed */
+    overflow-y: auto;
+    position: relative; /* Add position relative */
+    z-index: 2; /* Add a higher z-index to place it above the hero section */
+  }
+  
+  .feature .card {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+  }
+  
+  .feature .card-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .feature .card-text {
+    font-size: 16px;
+  }
+  
+  .feature .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Customize the feature section styles */
+  .feature {
+    padding: 80px 0;
+    height: calc(100vh - 200px); /* Adjust the height as needed */
+    overflow-y: auto;
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .feature {
+      height: auto;
+    }
+  }
