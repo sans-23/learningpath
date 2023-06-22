@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const verifyToken = require('./src/middleware/auth');
-const {connectdb} = require('./src/middleware/db');
+const connectdb = require('./src/middleware/db');
 
 const app = express();
 
