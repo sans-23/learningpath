@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const CourseItemSchema = new mongoose.Schema({
   itemType: {
     type: String,
-    enum: ['video', 'practice', 'resource'],
+    enum: ['video', 'resource'],
     required: true,
   },
   title: {
@@ -35,11 +35,11 @@ const CourseSchema = new mongoose.Schema({
     ref: 'CourseItem',
     default: null,
   },
-  practiceQuestions: [{
-    question: String,
-    options: [String],
-    correctAnswer: String,
-  }],
+  nextCourse: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CourseItem',
+    default: null,
+  },
 });
 
 const LearningPathSchema = new mongoose.Schema({
