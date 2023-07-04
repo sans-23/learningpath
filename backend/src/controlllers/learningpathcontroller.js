@@ -38,6 +38,8 @@ async function populateCourseItems(course) {
   course.courseItems = [];
   while (currentItemId) {
     const courseItem = await CourseItem.findById(currentItemId).lean().exec();
+    // get UserCourseItem.completed by currentitemId and usedId and make it equal to courseItem.completed
+    // we need to get userId from functional arguement which will be coming from parent functions req obj (in form of cookie may)
     course.courseItems.push(courseItem);
     currentItemId = courseItem.nextItem;
   }

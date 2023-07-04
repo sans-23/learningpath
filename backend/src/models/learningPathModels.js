@@ -63,8 +63,26 @@ const LearningPathSchema = new mongoose.Schema({
   },
 });
 
+const UserCourseItemSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  courseItem: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CourseItem',
+    required: true,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const UserCourseItem = mongoose.model('UserCourseItem', UserCourseItemSchema);
 const CourseItem = mongoose.model('CourseItem', CourseItemSchema);
 const Course = mongoose.model('Course', CourseSchema);
 const LearningPath = mongoose.model('LearningPath', LearningPathSchema);
 
-module.exports = { CourseItem, Course, LearningPath };
+module.exports = { CourseItem, Course, LearningPath, UserCourseItem };
