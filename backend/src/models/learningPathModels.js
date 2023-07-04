@@ -61,10 +61,6 @@ const LearningPathSchema = new mongoose.Schema({
     ref: 'Course',
     default: null,
   },
-  sharedLink: {
-    type: String,
-    unique: true,
-  },
 });
 
 const CourseItem = mongoose.model('CourseItem', CourseItemSchema);

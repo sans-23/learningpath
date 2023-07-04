@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose")
 
-const uri = "mongodb+srv://sans23:sans23@cluster0.imfbwwj.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://sans23:sans23@cluster0.imfbwwj.mongodb.net/?retryWrites=true&w=majority/learningpath";
 const dbName = 'learningpath';
 
 const connectdb = ()=>{
