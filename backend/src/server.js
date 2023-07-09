@@ -2,7 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
-const verifyToken = require('./middleware/auth');
+const {verifyToken} = require('./middleware/auth');
 const connectdb = require('./middleware/db');
 
 const app = express();
