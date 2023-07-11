@@ -4,7 +4,7 @@ import { Card, Container, Row, Col } from 'react-bootstrap';
 function Feature() {
   return (
     <section className="feature">
-      <div className="feature-content" style={{ height: '500px', overflow: 'auto' }}>
+      <div className="feature-content">
         <Container>
           <Row>
             <Col lg={4}>

@@ -9,26 +9,20 @@
 
 body {
   background-color: var(--primary-color) !important;
-  color: var(--text-color);
+  color: var(--text-color) !important;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: scroll;
 }
 
-/* Make the app take full screen size */
-.App {
-  height: 100vh;
+.spinner {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-header {
-  padding: 20px 0;
+  justify-content: center;
+  padding-top: 18%;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 2px;
   background-color: #2A2D34;
 }
 
@@ -39,30 +33,6 @@ header {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #2A2D34;
-}
-
-.learning-path-page {
-  display: flex;
-}
-
-.left-panel {
-  flex: 1;
-  padding: 20px;
-  background-color: #f8f8f8;
-}
-
-.left-panel h2 {
-  margin-bottom: 20px;
-}
-
-.right-panel {
-  flex: 1;
-  padding: 20px;
-  background-color: #f2f2f2;
-}
-
-.right-panel h2 {
-  margin-bottom: 20px;
 }
 
 .card {
@@ -83,31 +53,4 @@ header {
 
 .btn-primary {
   margin-right: 10px;
-}
-
-.card-grid-container {
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.card-grid {
-  display: inline-flex;
-}
-
-.card-grid .card {
-  flex: 0 0 auto;
-  margin-right: 20px;
-}
-
-.card-grid .card-img-top {
-  object-fit: cover;
-  height: 200px;
-}
-
-.tags-container {
-  margin-top: 10px;
-}
-
-.tags-container .badge {
-  margin-right: 5px;
 }

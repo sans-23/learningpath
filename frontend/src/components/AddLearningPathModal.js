@@ -1,41 +1,29 @@
 import React, { useState } from 'react';
-import { Modal, Form, Button, Badge } from 'react-bootstrap';
+import { Modal, Form, Button } from 'react-bootstrap';
 
-const AddLearningPathModal = ({ show, onClose, onAddLearningPath }) => {
+const AddLearningPathModal = ({ target, show, onClose, onAdd }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
+  const handleTitleChange = (event) => setTitle(event.target.value);
+  const handleDescriptionChange = (event) => setDescription(event.target.value);
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const handleTagsChange = (event) => {
-    setTags(event.target.value);
-  };
-
-  const handleAddLearningPath = () => {
-    const tagsArray = tags.split(',').map((tag) => tag.trim());
-    const learningPath = {
+  const handleAdd = () => {
+    if (title.trim() === '' || description.trim() === '') return;
+    const element = {
+      id: Math.random().toString(),
       title: title,
-      description: description,
-      tags: tagsArray
+      subtitle: description,
     };
-    onAddLearningPath(learningPath);
+    onAdd(element);
     setTitle('');
     setDescription('');
-    setTags('');
-    // Remove the navigation code from here
   };
 
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Learning Path</Modal.Title>
+        <Modal.Title>Add {target}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -47,28 +35,14 @@ const AddLearningPathModal = ({ show, onClose, onAddLearningPath }) => {
             <Form.Label>Description</Form.Label>
             <Form.Control as="textarea" rows={3} placeholder="Enter description" value={description} onChange={handleDescriptionChange} />
           </Form.Group>
-          <Form.Group controlId="formTags">
-            <Form.Label>Tags</Form.Label>
-            <div className="tags-container">
-              {tags.split(',').map((tag, index) => (
-                <Badge key={index} pill variant="primary">
-                  {tag.trim()}
-                </Badge>
-              ))}
-            </div>
-            <Form.Control type="text" placeholder="Enter tags" value={tags} onChange={handleTagsChange} />
-            <Form.Text className="text-muted">
-              Add tags separated by commas (e.g., tag1, tag2, tag3)
-            </Form.Text>
-          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleAddLearningPath}>
-          Add Learning Path
+        <Button variant="primary" onClick={handleAdd}>
+          Add
         </Button>
       </Modal.Footer>
     </Modal>

@@ -1,116 +1,120 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import EmbeddedVideo from '../../components/EmbeddedVideo';
 import MaterialList from '../../components/MaterialList';
-import Swiper from 'swiper';
-import './LearningPathConsumptionPage.css';
+import Swiper, { EffectFade } from 'swiper';
+import './ConsumptionPage.css';
+import { Spinner } from 'react-bootstrap';
 
 const ConsumptionPage = () => {
-  // Replace with actual learning path data
-  const learningPath = {
-    title: 'Data Structure and Algorithm',
-    courses: [
-      {
-        title: 'Array',
-        materials: [
-          { title: 'Material 1', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 2', url: 'https://www.youtube.com/embed/hGeL_vm3pX4', completed: false },
-          { title: 'Material 3', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 4', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 5', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 6', url: 'https://www.youtube.com/embed/hGeL_vm3pX4', completed: false },
-          { title: 'Material 7', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 8', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 9', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 10', url: 'https://www.youtube.com/embed/hGeL_vm3pX4', completed: false },
-          { title: 'Material 11', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 12', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-        ],
-      },
-      {
-        title: 'LinkedList',
-        materials: [
-          { title: 'Material 3', url: 'https://www.youtube.com/embed/video3', completed: false },
-          { title: 'Material 4', url: 'https://www.youtube.com/embed/video4', completed: false },
-        ],
-      },
-      {
-        title: 'Graph',
-        materials: [
-          { title: 'Material 3', url: 'https://www.youtube.com/embed/video3', completed: false },
-          { title: 'Material 4', url: 'https://www.youtube.com/embed/video4', completed: false },
-        ],
-      },
-      {
-        title: 'Array',
-        materials: [
-          { title: 'Material 1', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 2', url: 'https://www.youtube.com/embed/hGeL_vm3pX4', completed: false },
-          { title: 'Material 3', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-          { title: 'Material 4', url: 'https://www.youtube.com/embed/pSB3WIzAUAA', completed: false },
-        ],
-      },
-    ],
-  };
-
+  const { id } = useParams(); // Get the id parameter from the URL
+  const [learningPath, setLearningPath] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(0);
-  const [selectedMaterial, setSelectedMaterial] = useState(learningPath.courses[0].materials[0]);
-  const [materials, setMaterials] = useState(learningPath.courses[0].materials);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [materials, setMaterials] = useState(null);
 
   const swiperRef = useRef(null);
   const swiperContainerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(selectedCourse);
 
   useEffect(() => {
-    const initSwiper = () => {
-      swiperRef.current = new Swiper(swiperContainerRef.current, {
-        autoHeight: true,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          type: 'progressbar'
-        },
-        loop: false,
-        effect: 'slide',
-        spaceBetween: 30,
-        speed: 230,
-        on: {
-          init: function () {
-            setActiveIndex(selectedCourse);
-          },
-          slideChangeTransitionStart: function () {
-            setActiveIndex(this.realIndex);
-          }
-        }
-      });
-    };
-
-    initSwiper();
-
-    return () => {
-      if (swiperRef.current) {
-        swiperRef.current.destroy();
+    const fetchLearningPath = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/v1/learning-paths/${id}`);
+        const data = await response.json();
+        const learningPath = {
+          _id: data._id,
+          title: data.title,
+          description: data.description,
+          creator: data.creator,
+          firstCourse: data.firstCourse,
+          courses: data.courses.map((course) => {
+            const courseItems = course.courseItems.map((item) => ({
+              _id: item._id,
+              itemType: item.itemType,
+              title: item.title,
+              url: item.url,
+              nextItem: item.nextItem
+            }));
+            return {
+              _id: course._id,
+              title: course.title,
+              description: course.description,
+              courseItems
+            };
+          })
+        };
+        setLearningPath(learningPath);
+        setSelectedMaterial(learningPath.courses[0].courseItems[0]);
+        setMaterials(learningPath.courses[0].courseItems);
+      } catch (error) {
+        console.error('Failed to fetch learning path:', error);
       }
     };
-  }, [selectedCourse]);
 
-  useEffect(() => {
-    if (swiperRef.current) {
-      swiperRef.current.slideTo(selectedCourse);
-    }
-  }, [selectedCourse]);
+    fetchLearningPath();
+    Swiper.use([EffectFade]);
+    const initSwiper = () => {
+      if (learningPath) {
+        swiperContainerRef.current = document.querySelector('.swiper-container');
+  
+        swiperRef.current = new Swiper(swiperContainerRef.current, {
+          autoHeight: true,
+          autoplay: {
+            delay: 5000,
+            disableOnInteraction: false
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            type: 'progressbar'
+          },
+          loop: false,
+          effect: 'fade',
+          spaceBetween: 30,
+          speed: 230,
+          on: {
+            init: function () {
+              setActiveIndex(selectedCourse);
+            },
+            slideChangeTransitionStart: function () {
+              setActiveIndex(this.realIndex);
+            },
+            slideChange: function () {
+              swiperRef.current.update();
+  
+              const slides = swiperContainerRef.current.querySelectorAll('.swiper-slide');
+              if (slides.length > 0) {
+                const currentSlide = slides[swiperRef.current.realIndex];
+                const material = currentSlide.querySelector('.material');
+                if (material) {
+                  setSelectedMaterial(material);
+                }
+              }
+            }
+          }
+        });
+  
+        swiperRef.current.update();
+      }
+    };
+  
+    initSwiper();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (swiperRef.current && learningPath && selectedCourse >= 0 && selectedCourse < learningPath.courses.length) {
+    swiperRef.current.slideTo(selectedCourse);
+  }
 
   const handleCourseChange = (index) => {
     setActiveIndex(index);
     setSelectedCourse(index);
-    setMaterials(learningPath.courses[index].materials);
-    setSelectedMaterial(learningPath.courses[index].materials[0]);
+    setMaterials(learningPath.courses[index].courseItems); // Update materials to courseItems
+    setSelectedMaterial(learningPath.courses[index].courseItems[0]); // Select the first course item
   };
 
   const handleMaterialClick = (material) => {
@@ -130,9 +134,13 @@ const ConsumptionPage = () => {
     }
   };
 
+  if (!learningPath) {
+    return <div className='spinner'><Spinner animation="grow" variant="light" /></div>
+  }
+
+  console.log(learningPath);
   return (
     <div className="learning-path-consumption-page">
-      <h2 className='text-light'>{learningPath.title}</h2>
       <div className="container">
         <div className="swiper-container-wrapper swiper-container-wrapper--timeline">
           {/* Timeline */}
@@ -164,15 +172,23 @@ const ConsumptionPage = () => {
               {learningPath.courses.map((course, index) => (
                 <div className="swiper-slide" key={index}>
                   <div className='panels'>
+                  {selectedMaterial && (
                     <div className='vdo-player'>
                       <EmbeddedVideo url={selectedMaterial.url} />
+                      <br></br>
+                      <h5 className='text-light'>{learningPath.title}</h5>
+                      <p style={{color:"#fff"}}>{learningPath.description}</p>
                     </div>
+                  )}
+                    {materials && (
                     <MaterialList
+                      courseTitle={learningPath.courses[selectedCourse].title}
                       materials={materials}
                       selectedMaterial={selectedMaterial}
                       onMaterialClick={handleMaterialClick}
                       onMaterialCompletion={handleMaterialCompletion}
                     />
+                    )}
                   </div>
                 </div>
               ))}

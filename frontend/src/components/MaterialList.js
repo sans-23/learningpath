@@ -1,31 +1,30 @@
 // MaterialList.js
 
 import React from 'react';
+import '../pages/CreateLearningPathPage/CreateLearningPathPage.css'
 
-const MaterialList = ({ materials, selectedMaterial, onMaterialClick, onMaterialCompletion }) => {
-
+const MaterialList = ({ courseTitle, materials, selectedMaterial, onMaterialClick, onMaterialCompletion }) => {
+  const whiteText = {
+    color : "white"
+  }
   return (
-    <div className="material-list text-light">
-      <h5>Materials</h5>
+    <div className="material-list">
+      <div className='heading' style={whiteText}>
+        <div>{courseTitle}</div>
+      </div>
       {materials.length > 0 ? (
-        <ul>
+        <div className='tiles' style={{backgroundColor: "rgba(33,37,41,0.9)"}}>
           {materials.map((material, index) => (
-            <li key={index}>
-              <div
-                className={`material-item ${selectedMaterial === material ? 'selected' : ''}`}
-                onClick={() => onMaterialClick(material)}
-              >
-                <input
-                  type="checkbox"
-                  checked={material.completed}
-                  onChange={() => onMaterialCompletion(material)}
-                />
-                {material.title}
+              <>
+              <div className='tile' key={index}>
+              <div className='content' style={{...whiteText, cursor: "pointer"}} onClick={() => onMaterialClick(material)}>
+                <div>{material.title}</div>
+                <div className='subTitle'>{material.url}</div>
               </div>
-              <hr></hr>
-            </li>
+            </div>
+            </>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No materials available</p>
       )}

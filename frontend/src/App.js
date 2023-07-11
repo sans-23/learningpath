@@ -1,13 +1,9 @@
 import React from 'react';
-import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
 import Home from './pages/Home/Home';
-import About from './pages/About/About';
 import Header from './components/Header';
-import LearningPathPage from './pages/LearningPathPage/LearningPathPage';
-import SingleLearningPathPage from './pages/SingleLearningPathPage/SingleLearningPathPage';
 import ConsumptionPage from './pages/ConsumptionPage/ConsumptionPage';
-import SignInButton from './components/SignInButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './services/AuthContext';
 import CreateLearningPathPage from './pages/CreateLearningPathPage/CreateLearningPathPage';
@@ -21,11 +17,7 @@ function App() {
           <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/p" element={<CreateLearningPathPage />} />
-          <Route path="/auth" element={<SignInButton/>} />
-          <Route path="/about" element={<About />} />
-          <Route path="/learn" element={<ConsumptionPage />} />
-          <Route path="/learningpaths" element={<LearningPathPage/>} />
-          <Route path="/learningpaths/:name" element={<SingleLearningPathPage/>} />
+          <Route path="/learn/:id" element={<ConsumptionPage />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import MinorSection from './MinorSection';
 import './CreateLearningPathPage.css';
+import { Spinner } from 'react-bootstrap';
 
 const CreateLearningPathPage = () => {
-  const [learningPathTiles, setLearningPathTiles] = useState([]);
+  const [learningPathTiles, setLearningPathTiles] = useState(null);
   const [courseTiles, setCourseTiles] = useState([]);
   const [materialTiles, setMaterialTiles] = useState(new Map());
   const [materials, setMaterials] = useState([]);
@@ -63,6 +64,10 @@ const CreateLearningPathPage = () => {
     console.log(`Material with id ${id} clicked`);
     setMaterials(materialTiles.get(id));
   };
+
+  if(!learningPathTiles){
+    return <div className='spinner'><Spinner animation="grow" variant="light" /></div>
+  }
 
   return (
     <div className='major'>

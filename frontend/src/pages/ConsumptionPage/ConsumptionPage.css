@@ -5,10 +5,13 @@
 }
 
 .learning-path-consumption-page {
-  padding: 20px;
-  height: 100vh; /* Set the height to 100% of the viewport height */
-  display: flex;
-  flex-direction: column;
+  margin-top: 100px;
+}
+
+@media (max-width: 767px){
+  .learning-path-consumption-page{
+    margin-top: 50px;
+  }
 }
 
 .panels {
