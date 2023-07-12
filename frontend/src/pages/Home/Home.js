@@ -12,6 +12,7 @@ const Home = () => {
     const fetchLearningPaths = async () => {
       const response = await fetch('http://localhost:5000/api/v1/learning-paths');
       const data = await response.json();
+      console.log(data);
       setLearningPaths(data);
     };
     fetchLearningPaths();
@@ -30,7 +31,7 @@ const Home = () => {
             <div className="card-grid">
               {learningPaths &&
                 learningPaths.map((learningPath, index) => (
-                  <Card key={index} bg="dark" text="white" className="mb-4">
+                  <Card key={index} bg="dark" text="white" className="mb-4" style={{ width: '300px', height: '300px' }}>
                     <Link
                       to={{
                         pathname: `/learn/${learningPath._id}`,
@@ -38,12 +39,15 @@ const Home = () => {
                       }}
                       className="text-decoration-none"
                     >
-                      <Card.Img variant="top" src={`https://mdbcdn.b-cdn.net/img/new/standard/city/0${index + 41}.webp`} />
+                      <Card.Img variant="top" src={learningPath.coverImg} />
                       <Card.Body>
                         <Card.Title style={{ color: 'white' }}>{learningPath.title}</Card.Title>
-                        <Card.Text style={{ color: 'white' }}>{learningPath.description}</Card.Text>
+                        <Card.Text style={{ color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{learningPath.description}</Card.Text>
                       </Card.Body>
                     </Link>
+                    <div class="progress" role="progressbar" aria-valuenow={index + 41} aria-valuemin="0" aria-valuemax="100" style={{height: "1px"}}>
+                      <div class="progress-bar" style={{width: `${(index*41+ 836)%77}%`}}></div>
+                    </div>
                   </Card>
                 ))}
             </div>
