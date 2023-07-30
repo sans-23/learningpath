@@ -8,7 +8,7 @@ import logo from '../logo.png';
 function Header() {
   return (
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" fixed="top">
-      <Navbar.Brand as={NavLink} to="/">&nbsp;&nbsp; <img style={{width:"40px", height:"40px", margin:"0px", padding:"0px"}} src={logo} /> &nbsp;&nbsp;Learning Path</Navbar.Brand>
+      <Navbar.Brand as={NavLink} to="/">&nbsp;&nbsp; <img style={{width:"40px", height:"40px", margin:"0px", padding:"0px"}} src={logo} alt='logo'/> &nbsp;&nbsp;Learning Path</Navbar.Brand>
       <Navbar.Toggle aria-controls="navbarNav" />
       <Navbar.Collapse id="navbarNav">
         <Nav className="me-auto my-2 my-lg-0"

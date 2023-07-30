@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 
 const AddLearningPathModal = ({ target, show, onClose, onAdd }) => {
+  console.log(target)
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -23,7 +24,7 @@ const AddLearningPathModal = ({ target, show, onClose, onAdd }) => {
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Add {target}</Modal.Title>
+        <Modal.Title style={{color:"black"}}>Add {target}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

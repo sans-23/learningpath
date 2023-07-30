@@ -8,8 +8,12 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './services/AuthContext';
 import CreateLearningPathPage from './pages/CreateLearningPathPage/CreateLearningPathPage';
 
+import { Provider } from 'react-redux'
+import store from './app/store'
+
 function App() {
   return (
+    <Provider store={store}>
     <AuthProvider>
       <GoogleOAuthProvider clientId="53216454829-hvqli6c62q35rf63u5bt05b6t6snpald.apps.googleusercontent.com">
         <BrowserRouter>
@@ -22,6 +26,7 @@ function App() {
         </BrowserRouter>
       </GoogleOAuthProvider>
     </AuthProvider>
+    </Provider>
   );
 }
 
