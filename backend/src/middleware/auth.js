@@ -3,28 +3,6 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
-const axios = require('axios');
-
-async function fetchPublicKey() {
-  try {
-    const response = await axios.get('https://www.googleapis.com/oauth2/v3/certs');
-    const { keys } = response.data;
-    
-    // Find the key with the desired algorithm (e.g., RS256)
-    const publicKey = keys.find(key => key.alg === 'RS256');
-    
-    if (publicKey) {
-      const { n, e } = publicKey;
-      const publicKeyValue = `-----BEGIN PUBLIC KEY-----\n${n}\n-----END PUBLIC KEY-----`;
-      return publicKeyValue;
-    } else {
-      throw new Error('Public key not found');
-    }
-  } catch (error) {
-    console.error('Error fetching public key:', error.message);
-    throw error;
-  }
-}
 
 const client = new OAuth2Client('53216454829-hvqli6c62q35rf63u5bt05b6t6snpald.apps.googleusercontent.com');
 
@@ -39,7 +17,7 @@ exports.verifyToken = async (req, res) => {
     const { email, name, picture } = ticket.getPayload();
 
     // Check if the user already exists in the database
-    let user = await User.findOne({ email }).maxTimeMS(1000000).exec();
+    let user = await User.findOne({ email }).exec();
 
     // If the user doesn't exist, create a new user
     if (!user) {
@@ -51,8 +29,8 @@ exports.verifyToken = async (req, res) => {
 
       user = await newUser.save();
     }
-
-    res.json({ email, name, picture }); // Send response data
+    const token = jwt.sign({ userId: user._id }, 'YOUR_SECRET_KEY', { expiresIn: '30d' });
+    res.json({ token, email, name, picture }); // Send response data
   } catch (error) {
     console.error('Error signing in with Google:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -60,22 +38,26 @@ exports.verifyToken = async (req, res) => {
 }
 
 exports.isAuthenticatedUser = async (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  console.log(token);
+  const { authorization } = req.headers;
 
-  if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  console.log(authorization);
+
+  if (!authorization || !authorization.startsWith('Bearer')) {
+    return res.status(401).json({ error: 'Unauthorized - No token provided' });
   }
 
-  const publicKey = await fetchPublicKey();
+  const token = authorization.split(' ')[1];
+  console.log(token)
 
   try {
-    const decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] });
+    const decoded = jwt.verify(token, 'YOUR_SECRET_KEY');
     console.log(decoded);
-    req.user = decoded;
-    next(); // Proceed to the secured route handler
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    req.user = user;
+    next();
   } catch (error) {
+    console.error('Error verifying JWT token:', error.message);
     return res.status(403).json({ error: `Invalid token ${error}` });
   }
 }

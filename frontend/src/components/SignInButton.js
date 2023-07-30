@@ -1,6 +1,6 @@
 import React from 'react';
 import { useContext } from 'react';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import jwt_decode from "jwt-decode";
 import AuthContext from '../services/AuthContext';
 
@@ -11,8 +11,7 @@ const SignInButton = () => {
     const tokenId = credentialResponse.credential;
     const decodedToken = jwt_decode(tokenId);
     const { email, name, picture } = decodedToken;
-
-    login(tokenId);
+    console.log('Login Success', email, name, picture, tokenId);
 
     try {
         const response = await fetch('http://localhost:5000/api/auth/google', {
@@ -24,7 +23,9 @@ const SignInButton = () => {
         });
 
         if (response.ok) {
-          console.log('Sign in successful!', email, name, picture);
+          const responseData = await response.json();
+          login(responseData.token);
+          console.log('Sign in successful!', email, name, picture, responseData);
         } else {
           console.error('Error creating user:', response.statusText);
         }

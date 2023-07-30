@@ -39,7 +39,7 @@ router
   .get(getLearningPaths);
 router
   .route("/learning-paths/:id")
-  .get(getLearningPath)
+  .get(isAuthenticatedUser, getLearningPath)
   .put(isAuthenticatedUser, updateLearningPath)
   .delete(isAuthenticatedUser, deleteLearningPath);
 router

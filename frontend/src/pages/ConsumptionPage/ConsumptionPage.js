@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import EmbeddedVideo from '../../components/EmbeddedVideo';
 import MaterialList from '../../components/MaterialList';
 import Swiper, { EffectFade } from 'swiper';
 import './ConsumptionPage.css';
 import { Spinner } from 'react-bootstrap';
+import AuthContext from '../../services/AuthContext'
 
 const ConsumptionPage = () => {
   const { id } = useParams(); // Get the id parameter from the URL
@@ -16,11 +17,18 @@ const ConsumptionPage = () => {
   const swiperRef = useRef(null);
   const swiperContainerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(selectedCourse);
+  const { accessToken } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchLearningPath = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/learning-paths/${id}`);
+        console.log(accessToken);
+        const response = await fetch(`http://localhost:5000/api/v1/learning-paths/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Include the access token in the request headers
+            'Content-Type': 'application/json',
+          },
+        });
         const data = await response.json();
         const learningPath = {
           _id: data._id,
